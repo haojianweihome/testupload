@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hjw.home.user.dao.UserMapper">
+	<insert id="saveuser" parameterType="com.hjw.home.user.User" useGeneratedKeys="true" keyProperty="id">
+		insert into tb_user(id,name,sex,age) values(#{id},#{name},#{sex},#{age})
+	</insert>
+	<select id="getalluser" resultType="com.hjw.home.user.User">
+		select * from tb_user
+	</select>
+</mapper>

@@ -1,0 +1,68 @@
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">    
+ <amq:connectionFactory id="amqConnectionFactory"
+        brokerURL="tcp://127.0.0.1:61616" userName="admin" password="admin"  >
+        <property name="trustAllPackages" value="true"/>
+ </amq:connectionFactory>
+        
+  <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">  
+    <property name="connectionFactory" ref="amqConnectionFactory"/>  
+    <property name="maxConnections" value="10"/>  
+</bean>        
+ <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->  
+        <property name="targetConnectionFactory" ref="amqConnectionFactory"></property>
+        <property name="clientId" value="clientId_002" />
+        
+        <!-- 同上，同理 -->
+        <!-- <constructor-arg ref="amqConnectionFactory" /> -->
+        <!-- Session缓存数量 -->
+ </bean>
+   
+        
+        
+        <!-- Spring JmsTemplate 的消息生产者 start-->
+
+    <!-- 定义JmsTemplate的Queue类型 -->
+    <bean id="jmstopicTemplate" class="org.springframework.jms.core.JmsTemplate">
+       <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="defaultDestination" ref="topicDestination"></property>  
+        <!-- 进行持久化 -->  
+        <property name="deliveryMode" value="2" />  
+        <!-- 开启订阅模式 -->  
+        <property name="pubSubDomain" value="true" /> 
+    </bean>
+    
+	<!--这个是主题目的地，一对多的-->  
+	<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">  
+	    <constructor-arg value="topic"/>  
+	</bean> 
+	
+<bean id="consumerMessageListener" class="com.hjw.home.jms.ConsumerMessageListener"/>
+
+<bean id="userMessageConverter"  
+        class="com.hjw.home.jms.UserMessageConverter" />  	
+	<!-- 消息监听容器 -->  
+ 
+<bean id="myListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="connectionFactory" />  
+        <!--消息目的地 -->  
+        <property name="destination" ref="topicDestination" />  
+        <!--消息监听类 -->  
+        <property name="messageListener" ref="consumerMessageListener" />  
+        <!-- 发布订阅模式 -->  
+        <property name="pubSubDomain" value="true" />  
+        <!-- 消息持久化值设置为true -->  
+        <property name="subscriptionDurable" value="true" />  
+        <!--消息接收超时 -->  
+        <property name="receiveTimeout" value="10000" />  
+        <!-- 接收者ID -->  
+        <property name="clientId" value="clientId_002" />  
+        <property name="durableSubscriptionName" value="clientId_002" />  
+    </bean>  
+
+   
+</beans>  

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans.xsd"  default-autowire="byName" default-lazy-init="false">
+		<!-- <bean id="queuesService" class="com.vito.platform.service.jms.QueuesService"></bean> -->
+		
+		
+		<!-- <bean id="connection" class="com.mongodb.Mongo"/>
+		<bean id="db" class="com.mongodb.DB"/>
+		<bean id="myFS" class="com.mongodb.gridfs.GridFS"/>
+		<bean id="collection" class="com.mongodb.DBCollection">
+		
+	   </bean>
+	   
+	   <bean id="mongoUploadUtil" class="com.hjw.home.core.MongoUploadUtil">
+			<property name="mongoClient" ref="mongoClient" />
+			<property name="dbName" value="orcl" />
+	  </bean>  -->
+	     		
+</beans>
